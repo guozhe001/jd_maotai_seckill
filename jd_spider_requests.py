@@ -26,6 +26,7 @@ class SpiderSession:
     """
     Session相关操作
     """
+
     def __init__(self):
         self.cookies_dir_path = "./cookies/"
         self.user_agent = global_config.getRaw('config', 'DEFAULT_USER_AGENT')
@@ -271,7 +272,7 @@ class JdSeckill(object):
 
         # 初始化信息
         self.sku_id = global_config.getRaw('config', 'sku_id')
-        self.seckill_num = 2
+        self.seckill_num = 1
         self.seckill_init_info = dict()
         self.seckill_url = dict()
         self.seckill_order_data = dict()
@@ -441,10 +442,12 @@ class JdSeckill(object):
             'Referer': 'https://item.jd.com/{}.html'.format(self.sku_id),
         }
         while True:
+            logger.info("url: %s, headers: %s, params: %s", url, headers, payload)
             resp = self.session.get(url=url, headers=headers, params=payload)
             resp_json = parse_json(resp.text)
+            logger.info("resp_json: %s", resp_json)
             if resp_json.get('url'):
-                # https://divide.jd.com/user_routing?skuId=8654289&sn=c3f4ececd8461f0e4d7267e96a91e0e0&from=pc
+                # https://divide.jd.com/user_routing?skuId=10027082913439&sn=c3f4ececd8461f0e4d7267e96a91e0e0&from=pc
                 router_url = 'https:' + resp_json.get('url')
                 # https://marathon.jd.com/captcha.html?skuId=8654289&sn=c3f4ececd8461f0e4d7267e96a91e0e0&from=pc
                 seckill_url = router_url.replace(
